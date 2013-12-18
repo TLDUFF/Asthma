@@ -1,0 +1,39 @@
+/* 
+    Document   : participant.css
+    Created on : Dec 17, 2013, 11:55:06 AM
+    Author     : tluasduffield
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root { 
+    display: block;
+    
+}
+
+body {
+    font-family: sans-serif;
+    font-size: 17px;
+    /*font-weight: bold;*/
+    color: 333300;
+}
+
+#container {
+    background-color: whitesmoke;
+    width: 500px;
+    font-family: sans-serif;
+    font-size: 14px;
+    padding-left: 5px;
+    padding-left: 5px;
+    border-color: gray;
+}
+
+#text {
+    color: 333000;
+    font-size: 15px;
+    
+}
+#error {
+    color: red;
+    font-weight: bold;
+}
