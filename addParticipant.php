@@ -5,7 +5,7 @@
  * Author: tduff@sdsc.edu
  * About: Displays the form to add a participant to the asthma survey,
  * Generates the unique survey link for the participant, based on their 
- * PregID.
+ * PregID. Click on "Send Email" to open mail client to participant with unique survey link.
  * 
  * Survey Monkey link is: http://www.surveymonkey.com/s/PAAQ
  * append to that link
@@ -63,69 +63,79 @@ mysql_select_db($db_database, $db_server)
     
    <input type="submit" name="submit" value="ADD RECORD" />
 </form>
+<br /><br /><br />
 
 <?php
 // if all three fields are set
 if (isset ($_POST['email']) && isset ($_POST['pregid']) && isset ($_POST['pregid2'])) 
 {
-
+    
     // Check that PregIDs match, are valid numbers, then insert
     if (($_POST['pregid']) === ($_POST['pregid2']))
     {
+        // pregid is only numbers, and 10 or 11 digits.
+        if (preg_match( "/^[0-9]{10,11}$/", $_POST['pregid'])) 
+        {
+            $pregid = get_post('pregid');
+        } else {
+            echo '<div class="error">PregID must be 10 or 11 digits long. (numbers only)</div>';
+            // clear vars for re-entry
+            $pregid = '';
+            exit;
+        }
         
-        // set vars
-        $email = get_post('email');
-        $pregid = get_post('pregid');   
-        // DEBUG 
-//        echo "pregid is $pregid" . '<br />';
-//        $pregid2 = get_post('pregid2');
-        //DEBUG 
-//        echo "pregid2 is $pregid2". '<br />';
+        // Validate email address
+        if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) 
+        {   
+            $email = get_post('email');
+        } else {  
+            echo '<div class="error">You must enter a valid email address. </div>';
+             //clear vars for re-entry
+            $email = $pregid = '';
+            exit; 
+        }
+         
+        // Define Vars
         $link = "http://www.surveymonkey.com/s/PAAQ";
         $survey_link = $link . "?c=$pregid";
         $query = "INSERT INTO participants VALUES" .
-                "(NULL, '$email', '$pregid', '$survey_link')";
-        //DEBUG
-//        echo '<br />';
-//        echo "$query";
-//        
-        // Check that pregid is only numbers, and 10 or 11 digits.
-        if (!preg_match( "/^[0-9]{10,11}$/", $pregid)) {
-            echo '<div class="error">PregID must be 10 or 11 digits long. (numbers only)</div>';
-            // clear vars for re-entry
-            $email = $pregid = $pregid2 = $survey_link = $query = '';
-            //exit;
-        } else {
-            //DEBUG
-//            echo "Inserting into db.";
-     
-            //INSERT or ERROR
-            if (mysql_query($query, $db_server)) {
+                "(NULL, '$email', $pregid, '$survey_link');";
+        $subject = "Asthma Survey";
+        $body = '';
+        $mail = '';
+        
+        //INSERT Recrod or throw ERROR
+        if (mysql_query($query, $db_server)) 
+        {
                 echo '<div id="container">';
                 echo '<br />';
                 echo "Record successfully added to the participants table.";
-                echo '<br /><br />';
+                echo '<br />';
+                $body = "     $survey_link ";
+                $mail = "mailto:$email?subject=$subject&body=$body";
+                echo '<br />';
                 echo "The link for $email, with PregID $pregid, is: ";
                 echo '<br>';
-                echo '<a href="' . $survey_link . '">' . $survey_link . '</a>';
-                echo '<br /><br />';
+                echo '<a href="'. $survey_link .'" target="_blank">' . $survey_link . '</a>';
+                echo '<br /><br /><br />';
                 echo '</div>';
-            } else {
+                echo '<br /><br />';
+                echo '<div id="email"><a href="'. $mail . '">Send Email</a></div>';   
+                echo '<br /><br />';
+        } else {
                 echo '<div id="container">';
                 echo '<br />';
                 echo '<div class="error"> INSERT FAILED: </div>' . " $query<br /><br />" .
-                    mysql_error() . "<br /><br />";  //TDUFF RELOAD HOME PAGE
+                    mysql_error() . "<br /><br />";  
+                $email = $pregid = $pregid2 = $survey_link = $query = '';
                 echo '</div>';
-            }// end if/else INSERT
-        } //end if pregid is numbers
-    } else {
-        //TDUFF RELOAD HOME PAGE
+        }// end if/else INSERT 
+    } else {// PregIDs do not match
         echo '<div class="error">PregIds do not match. Please re-enter. </div>';
         // clear vars for re-entry
         $email = $pregid = $pregid2 = $survey_link = $query = '';
     }// end if PREGIDs match
 }//end if isset
-
 
 mysql_close($db_server);
 
@@ -133,8 +143,6 @@ function get_post($var)
 {
     return mysql_real_escape_string($_POST[$var]);
 }
-
-
-
 ?>
-    </center></body>
+
+      </center></body>
