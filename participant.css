@@ -3,7 +3,7 @@
     Created on : Dec 17, 2013, 11:55:06 AM
     Author     : tluasduffield
     Description:
-        Purpose of the stylesheet follows.
+        Stylesheet for addParticipant.php .
 */
 
 root { 
@@ -28,12 +28,16 @@ body {
     border-color: gray;
 }
 
-#text {
-    color: 333000;
-    font-size: 15px;
-    
+#email {
+    font-weight: bold;
+    font-size: 22px;
 }
-#error {
+
+/*Errors*/
+span.error{
+    color: red;
+}
+div.error {
     color: red;
     font-weight: bold;
 }
