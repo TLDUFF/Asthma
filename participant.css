@@ -18,6 +18,12 @@ body {
     color: 333300;
 }
 
+#logout {
+    text-align: right;
+    font-size: 13px;
+    font-weight: bold;
+}
+
 #container {
     background-color: whitesmoke;
     width: 500px;
