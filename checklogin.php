@@ -1,10 +1,10 @@
 <?php
 
-    $host="localhost"; // Host name 
-    $username="otisuser"; // Mysql username 
-    $password="PASSWORD"; // Mysql password 
-    $db_name="asthmadb"; // Database name 
-    $tbl_name="users"; // Table name 
+    $host=""; // Host name 
+    $username=""; // Mysql username 
+    $password=""; // Mysql password 
+    $db_name=""; // Database name 
+    $tbl_name=""; // Table name 
 
     // Connect to server and select databse.
     mysql_connect("$host", "$username", "$password")or die("cannot connect"); 
