@@ -11,7 +11,7 @@ and open the template in the editor.
     <body>
       
         <?php
-        require_once('./main_login.php');
+        require_once('./login_main.php');
         ?> 
 
     </body>
