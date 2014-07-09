@@ -6,7 +6,7 @@
     
     if(!isset($_SESSION["myusername"]))
     {
-        header("location:main_login.php");
+        header("location:login_main.php");
     } 
 ?>
 
